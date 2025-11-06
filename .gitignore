@@ -1,0 +1,6 @@
+*.txt
+*.log
+*.toml
+config.py
+__pycache__
+.vscode
