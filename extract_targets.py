@@ -28,7 +28,7 @@ def extract_timestamps(file:str)->dict[DivaTime,int]:
 
 
 if __name__== "__main__":
-    d=extract_timestamps(r"F:\SteamLibrary\steamapps\common\Hatsune Miku Project DIVA Mega Mix Plus\mods\EdenClubMixPack\rom\script\pv_1369_extreme.dsc")
+    d=extract_timestamps(r"F:\SteamLibrary\steamapps\common\Hatsune Miku Project DIVA Mega Mix Plus\mods\EdenMasochistEditPack\rom\script\pv_1268_extreme.dsc")
     for k,v in d.items():
         pass
         #print(k,v)

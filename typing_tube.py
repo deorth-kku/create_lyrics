@@ -2,6 +2,7 @@ from extract_timing import format_time
 from search_song import search_song
 import os,sys
 import requests
+from collections.abc import Generator
 
 def parse_file(text:str)->tuple[str,dict[float,str]]:
     m={}
@@ -105,13 +106,15 @@ def get_title(pvnum:int)->str:
 
 from utils import conv_pv_num
 
-def writetoml(lrc:dict[float:str],toml_path:str,offset:float=0):
+def writetoml(lrc:Generator[tuple[float,str]],toml_path:str,offset:float=0):
+    if type(lrc)==dict:
+        lrc=lrc.items()
     if os.path.exists(toml_path):
         if not ask_yes_no("%s exists, overwrite?"%toml_path):
             return
     with open(toml_path, 'w', encoding='utf-8') as f:
         f.write("lyrics = [\n")
-        for k,v in lrc.items():
+        for k,v in lrc:
             f.write(f'    {{time = {format_time((k+offset)*100000)}, text = "{strip_ruby(v).replace('"',r'\"')}"}},\n')
         f.write("]\n")
     print('write to file "%s"'%toml_path)

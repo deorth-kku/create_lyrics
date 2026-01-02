@@ -16,7 +16,7 @@ def ask_yes_no(prompt: str) -> bool:
             return False
         print("please enter y or n")
 
-def ask_for_num(prompt: str,canidate:list[str]) -> int:
+def ask_for_num(prompt: str) -> int:
     while True:
         ans = input(f"{prompt}: ").strip().lower()
         try:

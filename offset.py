@@ -16,4 +16,4 @@ if __name__ == "__main__":
         data = tomllib.load(f)
     for i in data["lyrics"]:
         t:time=i["time"]
-        print(offset(t,3.6))
+        print(offset(t,-0.57142))

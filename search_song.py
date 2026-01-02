@@ -11,7 +11,9 @@ def search_song(name:str)->Generator[tuple[str,str,str]]:
             db:dict[str,str]=diva_db_file(full)
             db.readlines()
             for k,v in db.items():
-                if k.endswith("song_name") and name in v:
+                if name.startswith("pv") and name in k:
+                    yield dir,k.split(".")[0],v
+                elif k.endswith("song_name") and name in v:
                     yield dir,k.split(".")[0],v
 
 

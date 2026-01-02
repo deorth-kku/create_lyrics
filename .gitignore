@@ -4,3 +4,6 @@
 config.py
 __pycache__
 .vscode
+*.json
+*.srt
+test.py
