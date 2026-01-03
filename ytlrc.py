@@ -89,8 +89,18 @@ langmap={
     "ja":"jp",
     "en":"en",
     "ko":"ko",
-    "zh":"cn"
+    "zh":"cn",
 }
+
+def getlang(code:str)->str:
+    code=code.lower()
+    if code in langmap:
+        return langmap[code]
+    for k,v in langmap.items():
+        if code.startswith(k):
+            return v
+    raise "cannot find lang:%s"%code
+
 
 
 if __name__=="__main__":
@@ -98,9 +108,7 @@ if __name__=="__main__":
      if len(sys.argv)>2:
          title=sys.argv[2]
      for lang,vtt in lyrics.items():
-        if lang not in langmap:
-            continue
-        lang=langmap[lang]
+        lang=getlang(lang)
         toml=gettomlpath(title,lang)
         vtt_to_toml(vtt, toml)
         print("write file",toml)

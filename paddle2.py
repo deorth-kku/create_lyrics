@@ -1,7 +1,7 @@
 import os
 import json
 from collections.abc import Generator
-
+import sys
 
 
 def getlines(lines:str)->Generator[str]:
@@ -158,42 +158,66 @@ def dict_to_srt(d: Generator[tuple[float,str]], filename: str):
 
 
 
-lines_lrc='''飲み干してマジカルに成る闇中ライトブルー
-　
-血を流して示す無個性
-無意味な心は爛れた
-眼を開くことさえ出来ない
-穢れのない人が空仰ぐ
+lines_lrc='''オシエテ Mr.Wonder　見たことの無い世界
+キミが語りだす　お伽の国の話
+手を取って･･･　連れてってほしい
+そう今夜　take on me
 
-生きづらい　音がない　何もない　いつからカラ
-ケセラセラ　ヘラヘラ　交わり違う、Libido
+仲良しグループ　不意に一言
+「恋をしてるの？」　わかるものなのね
+さわやかなそよ風　目を瞑れば浮かぶ
+そう　いたずらなその Smile
 
-愛　哀　阨　忌む鼓動　或る多様　無様を続けて
-憎　喪　葬　生衝動　夢想行脚　慚愧に生かされて
+Hey DJ! don’t stop the music forever.
+With you, I wanna be dancing on the floor.
+Hey DJ! don’t stop the music forever.
+心躍る二人 Irie に Lovin’
 
-記憶がバラバラに落ち踏まれて砕け散る
-スノッブ模して絵になるリアル三流サイコ狂う
+ミツメテ Mr.Wonder　まばゆい虹のヒカリ
+波は法線上で　ビートに響きわたる
+手を取って･･･　連れてってほしい
+ココナッツの甘い香り　キミのファンタジックなキセキ
 
-生きづらい　音がない　何もない　いつからカラ
+時を止めちゃうようなキセキ
 
-ケセラセラ　ヘラヘラ　交わり違う、Libido
+キミが見せてくれる素敵な景色
+いつだって新しい気持ちにさせて
+パステルピンクの雲を追い越していく
+ねえ　ずっと一緒にいたいよ
 
-愛　哀　阨　忌む鼓動　或る多様　無様を続けて
-憎　喪　葬　生衝動　夢想行脚　慚愧に生かされて
-曖昧に　鳴る鼓動　或る希望　軽薄な念い
-唄　埋　邁　左様ならと　無象行脚　安堵に満たされて
+抱きしめてよ　もっと　強く
+キミじゃなくちゃ　わたしダメなんだ
+離さないで　ずっと　強く
+そこらへんに落っこちてるはずの魔法
+私には見つけられないの
+
+オシエテ Mr.Wonder　見たことの無い世界
+キミが語りだす　お伽の国の話
+手を取って･･･　連れてってほしい
+本当は　恐いんだ　夢が醒めるのが
+
+ミツメテ Mr.Wonder　まばゆい虹のヒカリ
+波は法線上で　ビートに響きわたる
+手を取って･･･　連れてってほしい
+ココナッツの甘い香り　キミのファンタジックなキセキ
+
+時を止めちゃうようなキセキ 
 '''
 blacklist=[
-    "無",
     "ない",
-    "れて",
-    "動",
+    "人",
+    "って",
+    "した",
+    "だっ",
+
 ]
 
 
-fps=24
+fps=29.97
 if __name__=="__main__":
     d=list(getdict2())
-    #dict_to_srt(d,"1.srt")
-    #writetoml(d,"1.toml")
-    writetoml(d,os.path.join(lyrics_outdir,"1333_jp.toml"))
+    if len(sys.argv)<2:
+        dict_to_srt(d,"1.srt")
+        writetoml(d,"1.toml")
+    else:
+        writetoml(d,os.path.join(lyrics_outdir,"%s_jp.toml"%sys.argv[1]))

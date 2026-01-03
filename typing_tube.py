@@ -111,6 +111,8 @@ def writetoml(lrc:Generator[tuple[float,str]],toml_path:str,offset:float=0):
         try:
             num=int(os.path.basename(toml_path).split("_")[0])
             offset=find_offset(num)
+            if offset!=0:
+                print("writing with auto found offset %f"%offset)
         except:
             pass
     if type(lrc)==dict:
@@ -132,8 +134,11 @@ if __name__=="__main__":
         input_num=conv_pv_num(sys.argv[1])
     except:
         title=sys.argv[1]
-        _,input_num,_=next(search_song(title))
-        input_num=conv_pv_num(input_num)
+        if len(sys.argv)>2:
+            input_num=int(sys.argv[2])
+        else:
+            _,input_num,_=next(search_song(title))
+            input_num=conv_pv_num(input_num)
     else:
         title=get_title(input_num)
     if not title:
@@ -156,8 +161,8 @@ if __name__=="__main__":
     _,lrc=parse_file(getlrc(tt_id))
     toml_path=os.path.join(lyrics_outdir,"%d_jp.toml"%input_num)
     offset=float(0)
-    if len(sys.argv)>1 and sys.argv[1][0] in ('+','-'):
-        offset=float(sys.argv[1])
-    writetoml(lrc,toml_path,offset)
+    if len(sys.argv)>3 and sys.argv[3][0] in ('+','-'):
+        offset=float(sys.argv[3])
+    writetoml(lrc,toml_path,offset=offset)
     
 
