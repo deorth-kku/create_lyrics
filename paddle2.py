@@ -29,6 +29,8 @@ def splitwords_to_list(input_text: list[str]) -> Generator[str]:
                 yield part.lower()
         elif len(text)<=3:
             yield text
+        elif text[0]=="ら":
+            yield text
         else:
             for m in _tokenizer.tokenize(text):
                 t0=m.surface()
@@ -91,11 +93,14 @@ def getdict()->Generator[list[str]]:
                 parts[i]=""
         
         parts=list(splitwords_to_list(parts))
-        if len(line)==0 and (len(parts)==0 or (len(parts)==1 and parts[0]=="")):
-            print(idx,os.path.join(dist,file))
-            yield (file,"")
-            idx+=1
-            continue
+        if len(line)==0:
+            if len(parts)==0 or (len(parts)==1 and parts[0]==""):
+                print(idx,os.path.join(dist,file))
+                yield (file,"")
+                idx+=1
+                continue
+            else:
+                continue
         for part in parts:
             if part in blacklist:
                 continue
@@ -116,7 +121,8 @@ def getdict()->Generator[list[str]]:
                 idx+=1
                 break
 
-def getdict2()->Generator[tuple[float,str]]:
+from utils import lyrics
+def getdict2()->lyrics:
     for k,v in getdict():
         k=k.lstrip("0").split("_")[0]
         try:
@@ -129,8 +135,9 @@ def getdict2()->Generator[tuple[float,str]]:
 
 from typing_tube import writetoml
 from config import lyrics_outdir
+from utils import lyrics
 
-def dict_to_srt(d: Generator[tuple[float,str]], filename: str):
+def dict_to_srt(d: lyrics, filename: str):
     """
     将 dict[float, str] 写成 srt 文件。
     key: 开始时间（秒，float）
@@ -156,52 +163,85 @@ def dict_to_srt(d: Generator[tuple[float,str]], filename: str):
             f.write(f"{fmt(start)} --> {fmt(end)}\n")
             f.write(f"{text}\n\n")
 
+from offset import offsetgen
 
+lines_lrc='''いいから黙れよ愚民ども
 
-lines_lrc='''オシエテ Mr.Wonder　見たことの無い世界
-キミが語りだす　お伽の国の話
-手を取って･･･　連れてってほしい
-そう今夜　take on me
+アタシは都合のいい
+善人に見えます？
+平和ボケですかね
+フザケんじゃねぇ
+暴君の好き勝手
+その裏に死屍累々
+踏みつけられた犠牲
+わかってる？
 
-仲良しグループ　不意に一言
-「恋をしてるの？」　わかるものなのね
-さわやかなそよ風　目を瞑れば浮かぶ
-そう　いたずらなその Smile
+脳みその中身を さぁ
+ぶちまけて見せてよね
+この場で
+蠢いた思い それは
+きっと カタルシス
 
-Hey DJ! don’t stop the music forever.
-With you, I wanna be dancing on the floor.
-Hey DJ! don’t stop the music forever.
-心躍る二人 Irie に Lovin’
+あのさ言わせてもらうけど
+つけ上がってんじゃねンだよ
+アタシが笑っていりゃ アホ面下げて
+ネシズクソクカバ　ラッタッタよ
+陰口知らず生きるとは
+勇敢なことだね
+皆から後ろ指さされながら
+生きていけばいいんじゃないかしら
 
-ミツメテ Mr.Wonder　まばゆい虹のヒカリ
-波は法線上で　ビートに響きわたる
-手を取って･･･　連れてってほしい
-ココナッツの甘い香り　キミのファンタジックなキセキ
+アナタはただの
+偽善者サマに見えます
+頭イカれてるね
+何とか言えば？
+世界中に蔓延る
+悪意とは魑魅魍魎
+殴られた痛みは
+覚えてる
 
-時を止めちゃうようなキセキ
+ハラワタの中を ねぇ
+ぶちまけて見せられた 感覚
+抉られた心 それは
+きっと アポトシス
 
-キミが見せてくれる素敵な景色
-いつだって新しい気持ちにさせて
-パステルピンクの雲を追い越していく
-ねえ　ずっと一緒にいたいよ
+あの日の恨みは忘れねぇ
+イキがってんじゃねンだわ
+アタシが頷いてりゃ　バカ面下げて
+ネシズクソクカバ　ラッタッタよ
+アナタじゃ一生わからない
+You can not go to the next!
+アタシはまだまだ生きなきゃならないの
+本意不本意に関わらず
 
-抱きしめてよ　もっと　強く
-キミじゃなくちゃ　わたしダメなんだ
-離さないで　ずっと　強く
-そこらへんに落っこちてるはずの魔法
-私には見つけられないの
+アタシを否定したら
+末代まで呪うわ
+嬲られた精神は 戻らない
+あのさ言わせてもらうけど
+甘ったれんじゃねンだよ
+搾り取れるだけ搾取しまくられて
+アタシは果汁100％かよ
+無能のお仲間引き連れて
+どこかに消え去れ
+慰めてもらえばいいだろ
+傷の舐め合いと馴れ合いダイキライ
 
-オシエテ Mr.Wonder　見たことの無い世界
-キミが語りだす　お伽の国の話
-手を取って･･･　連れてってほしい
-本当は　恐いんだ　夢が醒めるのが
-
-ミツメテ Mr.Wonder　まばゆい虹のヒカリ
-波は法線上で　ビートに響きわたる
-手を取って･･･　連れてってほしい
-ココナッツの甘い香り　キミのファンタジックなキセキ
-
-時を止めちゃうようなキセキ 
+いいから黙れよテメェら！
+あの日の愚弄は忘れねぇよ
+奴隷じゃあねンだわ
+アタシの人生の リセマラは爆死
+レアキャラ引けずに萎え落ち
+世間を知らず生きるとは
+勇敢なことだね
+それじゃぁもう1回言ったげよか
+もう何度目かしらね
+ガキの使いじゃねンだよ
+ねえいい加減にしろよ言い飽きたわ
+ネシズクソクカバ　ラッタッタよ
+アナタじゃ一生わからない
+You can not go to the next!
+アタシは一足お先に失礼
+業(カルマ)に　オサラバよ　サヨウナラ  
 '''
 blacklist=[
     "ない",
@@ -210,14 +250,16 @@ blacklist=[
     "した",
     "だっ",
 
+
+    "れた"
 ]
 
 
-fps=29.97
+fps=30
 if __name__=="__main__":
     d=list(getdict2())
     if len(sys.argv)<2:
         dict_to_srt(d,"1.srt")
         writetoml(d,"1.toml")
     else:
-        writetoml(d,os.path.join(lyrics_outdir,"%s_jp.toml"%sys.argv[1]))
+        writetoml(d,os.path.join(lyrics_outdir,"%s_jp.toml"%sys.argv[1]),0.00001)

@@ -104,9 +104,9 @@ def get_title(pvnum:int)->str:
             if name:
                 return name
 
-from utils import conv_pv_num,find_offset
+from utils import conv_pv_num,find_offset,lyrics
 
-def writetoml(lrc:Generator[tuple[float,str]],toml_path:str,offset:float=0):
+def writetoml(lrc:lyrics,toml_path:str,offset:float=0):
     if offset==0:
         try:
             num=int(os.path.basename(toml_path).split("_")[0])

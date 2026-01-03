@@ -42,7 +42,7 @@ if __name__=="__main__":
 
 
     #args=["ffmpeg","-threads","1","-i",sys.argv[1], "-vf", "crop=434:40:206:320,negate",os.path.join(source,"%05d.png")]
-    args=["ffmpeg","-threads","1","-i",sys.argv[1],os.path.join(source,"%05d.png")]
+    args=["ffmpeg","-threads","1","-i"]+sys.argv[1:]+[os.path.join(source,"%05d.png")]
 
     subprocess.Popen(args,creationflags=subprocess.IDLE_PRIORITY_CLASS)
 
