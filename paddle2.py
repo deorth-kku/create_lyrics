@@ -237,6 +237,6 @@ from config import lyrics_outdir
 fps=25
 if __name__=="__main__":
     d=list(getdict2())
-    dict_to_srt(d,"1.srt")
+    #dict_to_srt(d,"1.srt")
     #writetoml(d,"1.toml")
     writetoml(d,os.path.join(lyrics_outdir,"1268_jp.toml"))
