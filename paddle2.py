@@ -9,9 +9,7 @@ def getlines(lines:str)->Generator[str]:
         yield line.strip()
 
 
-source=r"E:\ocr\source"
-dist=r"E:\ocr\dst"
-
+from config import dist
 
 from sudachipy import tokenizer
 from sudachipy import dictionary
@@ -21,24 +19,6 @@ _tokenizer = dictionary.Dictionary().create(
     mode=tokenizer.Tokenizer.SplitMode.A  # A=粗粒度 / B=默认 / C=最细（常用）
 )
 
-blacklist=[
-    "まま",
-    "ない",
-    "れない",
-    "って",
-    "じゃ",
-    "ねー",
-    "もう",
-    "ガラス",
-    "きみ",
-    "場",
-    "世",
-    "感",
-    "中",
-    "待",
-    "会い",
-    "来"
-]
 
 def splitwords_to_list(input_text: list[str]) -> Generator[str]:
     for text in input_text:
@@ -136,6 +116,20 @@ def getdict()->Generator[list[str]]:
                 idx+=1
                 break
 
+def getdict2()->Generator[tuple[float,str]]:
+    for k,v in getdict():
+        k=k.lstrip("0").split("_")[0]
+        try:
+            k=int(k)-1 # ffmpeg %05d.png starts with 00001.png, bruh
+        except:
+            k=0
+        k=k/fps
+        yield (k,v)
+
+
+from typing_tube import writetoml
+from config import lyrics_outdir
+
 def dict_to_srt(d: Generator[tuple[float,str]], filename: str):
     """
     将 dict[float, str] 写成 srt 文件。
@@ -164,79 +158,42 @@ def dict_to_srt(d: Generator[tuple[float,str]], filename: str):
 
 
 
-lines_lrc='''ハロウィンがやってきた
-お気に入りのもので飾り付けて
-蛍光灯割ってスタンドを蹴って
-暗闇に紛れるお化けもどき
-ああ　テンションあげよう！
-今日は不思議ちゃんデーです
-ポジティブシンキングで嫌なことはバイバイ
-カボチャをくり抜いて火を灯せ！
+lines_lrc='''飲み干してマジカルに成る闇中ライトブルー
+　
+血を流して示す無個性
+無意味な心は爛れた
+眼を開くことさえ出来ない
+穢れのない人が空仰ぐ
 
-魔女に仮装して　街を出歩こう
-恐怖におびえる子供たちよ
-さあ叫べ！さあ叫べ！
+生きづらい　音がない　何もない　いつからカラ
+ケセラセラ　ヘラヘラ　交わり違う、Libido
 
-さあ私の手をとって　扉を蹴って　外へと飛び出そうぜ
-たくさん溢れるお菓子求め　あっちこっち行ったり来たりで
-さあ君の夢を追って　走り回って　何度も繰り返そうぜ
-理想が現実になる　長い長いハロウィンは始まった！
+愛　哀　阨　忌む鼓動　或る多様　無様を続けて
+憎　喪　葬　生衝動　夢想行脚　慚愧に生かされて
 
-お化けがやってくる
-夜な夜なパレードが開幕する
-ジャックランタンは常にそばに
-終わらない一日の始まりを忘れたころに君は現れる
-どこからかその姿ふいに見せて消える
+記憶がバラバラに落ち踏まれて砕け散る
+スノッブ模して絵になるリアル三流サイコ狂う
 
-クリスマスがやってくる
-お気に入りのもので飾り付けて
-ソリ引っ張りだして　たくさんプレゼントのせて
-雪降り積もる街に飛び出そう
-寒さ吹っ飛ばせ！
-サンタクロースお呼びです
-トナカイ引っ張っちゃって空飛んじゃってもいいかい？
-クリスマスツリーに火を灯せ！
+生きづらい　音がない　何もない　いつからカラ
 
-プレゼントの中に隠した仕掛け
-開けてしまった子供たちよ
-さあ叫べ！さあ叫べ！さあ喚け！さあ喚け！
-ハロウィンは終わらない　恐怖のクリスマスのはじまりはじまり！
+ケセラセラ　ヘラヘラ　交わり違う、Libido
 
-楽しいことずっと続けようぜ
-好奇心はきっと抑えきれない！
-少しの出来心ぐらい許してもらえるはずさ
-そうやって人生を楽しもう
-ほらみんなで
-さあ叫べ！さあ叫べ！さあ叫べ！さあ叫べ！
-
-さあ私の手握って　ほらつかまって　空へと飛び立とうぜ
-クリスマスの夜はまだ長い　もっとずっと遊びたい
-ほら横隔膜で笑って　片足つって　キョトン顔を笑った
-これはクリスマスであり　ハロウィン　ハロウィン　365日
-さあ私の手をとって　扉を蹴って　外へと飛び出そうぜ
-たくさん溢れる笑顔求め　あっちこっち行ったり来たりで
-さあ君の夢を追って　走り回って　何度も繰り返そうぜ
-理想が現実になる　長い長いハロウィンはずっと終わらない 
+愛　哀　阨　忌む鼓動　或る多様　無様を続けて
+憎　喪　葬　生衝動　夢想行脚　慚愧に生かされて
+曖昧に　鳴る鼓動　或る希望　軽薄な念い
+唄　埋　邁　左様ならと　無象行脚　安堵に満たされて
 '''
+blacklist=[
+    "無",
+    "ない",
+    "れて",
+    "動",
+]
 
 
-def getdict2()->Generator[tuple[float,str]]:
-    for k,v in getdict():
-        k=k.lstrip("0").split("_")[0]
-        try:
-            k=int(k)
-        except:
-            k=0
-        k=k/fps
-        yield (k,v)
-
-
-from typing_tube import writetoml
-from config import lyrics_outdir
-
-fps=25
+fps=24
 if __name__=="__main__":
     d=list(getdict2())
     #dict_to_srt(d,"1.srt")
     #writetoml(d,"1.toml")
-    writetoml(d,os.path.join(lyrics_outdir,"1268_jp.toml"))
+    writetoml(d,os.path.join(lyrics_outdir,"1333_jp.toml"))
