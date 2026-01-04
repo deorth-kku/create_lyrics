@@ -77,7 +77,6 @@ def ytlrc(url)->tuple[str,dict[str,str]]:
     for lang in info['subtitles']:
         for format in info['subtitles'][lang]:
                 fmt = format['ext']
-                print(format)
                 if fmt == "vtt":
                     rsp=requests.get(format['url'],proxies=proxies)
                     m[lang]=rsp.text
@@ -99,16 +98,22 @@ def getlang(code:str)->str:
     for k,v in langmap.items():
         if code.startswith(k):
             return v
-    raise "cannot find lang:%s"%code
+    print("cannot find lang:%s, skipping"%code)
+    return None
 
 
 
 if __name__=="__main__":
-     title,lyrics=ytlrc(sys.argv[1])
-     if len(sys.argv)>2:
-         title=sys.argv[2]
-     for lang,vtt in lyrics.items():
+    title,lyrics=ytlrc(sys.argv[1])
+    offset=0
+    if len(sys.argv)>2:
+        title=sys.argv[2]
+    if len(sys.argv)>3:
+        offset=float(sys.argv[3])
+    for lang,vtt in lyrics.items():
         lang=getlang(lang)
+        if lang==None:
+            continue
         toml=gettomlpath(title,lang)
-        vtt_to_toml(vtt, toml)
+        vtt_to_toml(vtt, toml,offset=offset)
         print("write file",toml)

@@ -29,8 +29,6 @@ def splitwords_to_list(input_text: list[str]) -> Generator[str]:
                 yield part.lower()
         elif len(text)<=3:
             yield text
-        elif text[0]=="ら":
-            yield text
         else:
             for m in _tokenizer.tokenize(text):
                 t0=m.surface()
@@ -54,8 +52,9 @@ def is_contains_kanji(word: str) -> bool:
     return bool(HAS_KANJI.search(word))
 
 
-def matcheng(line:str,part:str)->bool:
-    parts=part.split()
+def matcheng(line:str,parts:list[str])->bool:
+    if len(parts)==0:
+        return False
     if len(parts)==1 and len(parts[0])<=3:
         return False
     m=0
@@ -101,25 +100,41 @@ def getdict()->Generator[list[str]]:
                 continue
             else:
                 continue
-        for part in parts:
-            if part in blacklist:
-                continue
-            if len(part)<2 and not is_contains_kanji(part):
-                continue
-            lower=line.lower()
-            if part.isascii() and lower.isascii():
-                if matcheng(lower,part):
-                    print(idx,os.path.join(dist,file),line,"("+part+")")
-                    yield (file,line)
-                    idx+=1
-                    break
-                else:
-                    continue
-            if part in lower:
-                print(idx,os.path.join(dist,file),line,"("+part+")")
-                yield (file,line)
-                idx+=1
-                break
+        
+        parts=[p for p in parts if p!= "" ]
+        if len(parts)==0:
+            continue
+
+        lower=line.lower()
+        if lower.isascii() and matcheng(lower,parts):
+            pass
+        elif matchjpn(lower,parts):
+            pass
+        else:
+            continue
+        print(idx,os.path.join(dist,file),line,parts)
+        idx+=1
+        yield (file,line)
+
+def hasascii(s:str)->bool:
+    for p in s:
+        if p.isascii():
+            return True
+    return False
+
+def matchjpn(line:str,parts:list[str])->bool:
+    if not hasascii(line):
+        parts=[p for p in parts if not p.isascii() ]
+
+    if len(parts)==0:
+        return False
+    m=0
+    for p in parts:
+        if p in blacklist:
+            continue
+        if p in line:
+            m+=1
+    return (m/len(parts))>0.5
 
 from utils import lyrics
 def getdict2()->lyrics:
@@ -165,83 +180,54 @@ def dict_to_srt(d: lyrics, filename: str):
 
 from offset import offsetgen
 
-lines_lrc='''いいから黙れよ愚民ども
+lines_lrc='''胎内の記憶を引きずって
+昨日のハイボール引きずって
+掛け布団のぬくもり引きずって
+コンクリートを今日も引きずっている
 
-アタシは都合のいい
-善人に見えます？
-平和ボケですかね
-フザケんじゃねぇ
-暴君の好き勝手
-その裏に死屍累々
-踏みつけられた犠牲
-わかってる？
+とろくさいミスだったり
+どうもなんなかった好意だったり
+母校の関連ワード「事件」だったり
+こんがらがって
+わや　わや
+過去だって軍鶏だって引きずっている
+わや　わや
+着飾ってやっぱ脱いだ事
+そんな葛藤も
+あんな愚行も
+みんな引きずってしまう
+わや　わや
+経緯、背負って　歴、抱いて　もう　こんがらがって
 
-脳みその中身を さぁ
-ぶちまけて見せてよね
-この場で
-蠢いた思い それは
-きっと カタルシス
-
-あのさ言わせてもらうけど
-つけ上がってんじゃねンだよ
-アタシが笑っていりゃ アホ面下げて
-ネシズクソクカバ　ラッタッタよ
-陰口知らず生きるとは
-勇敢なことだね
-皆から後ろ指さされながら
-生きていけばいいんじゃないかしら
-
-アナタはただの
-偽善者サマに見えます
-頭イカれてるね
-何とか言えば？
-世界中に蔓延る
-悪意とは魑魅魍魎
-殴られた痛みは
-覚えてる
-
-ハラワタの中を ねぇ
-ぶちまけて見せられた 感覚
-抉られた心 それは
-きっと アポトシス
-
-あの日の恨みは忘れねぇ
-イキがってんじゃねンだわ
-アタシが頷いてりゃ　バカ面下げて
-ネシズクソクカバ　ラッタッタよ
-アナタじゃ一生わからない
-You can not go to the next!
-アタシはまだまだ生きなきゃならないの
-本意不本意に関わらず
-
-アタシを否定したら
-末代まで呪うわ
-嬲られた精神は 戻らない
-あのさ言わせてもらうけど
-甘ったれんじゃねンだよ
-搾り取れるだけ搾取しまくられて
-アタシは果汁100％かよ
-無能のお仲間引き連れて
-どこかに消え去れ
-慰めてもらえばいいだろ
-傷の舐め合いと馴れ合いダイキライ
-
-いいから黙れよテメェら！
-あの日の愚弄は忘れねぇよ
-奴隷じゃあねンだわ
-アタシの人生の リセマラは爆死
-レアキャラ引けずに萎え落ち
-世間を知らず生きるとは
-勇敢なことだね
-それじゃぁもう1回言ったげよか
-もう何度目かしらね
-ガキの使いじゃねンだよ
-ねえいい加減にしろよ言い飽きたわ
-ネシズクソクカバ　ラッタッタよ
-アナタじゃ一生わからない
-You can not go to the next!
-アタシは一足お先に失礼
-業(カルマ)に　オサラバよ　サヨウナラ  
+横着こいてた事引きずって
+「更生しました」つったって
+やらなかん事やっとりゃせんから
+まー美談には なりゃせんわ
+「時に必死こいて逃げようと　やった事はほかれない」と
+タイヤの下の腕が何かを　伝えようとしていた
+こんがらがって
+わや　わや
+bad だって bird だって引きずっている
+わや　わや
+苛ついてギラついて非行
+そんな脱法も
+あんな犯行も
+みんな引きずってしまう
+わや　わや
+経緯、背負って　歴、抱いて　もう　こんがらがっている
+(間奏)
+わやになった　わたしの過ちが轍になって
+わやになった　わたしの轍はいつしか標
+こんがらがって
+わや　わや
+総理だって鶏だって引きずっている
+わや　わや
+ボーイだってガール抱いて　どーん
+そんな禍根も
+あんな bad も
+みんな引きずってるから
+わや　わや
+経緯、背負って　歴、抱いて　もう　こんがらがってろ！！ 
 '''
 blacklist=[
     "ない",
@@ -249,17 +235,24 @@ blacklist=[
     "って",
     "した",
     "だっ",
+    "て",
+    "た",
+    "に",
+    "か",
+    'の',
+    'が',
 
-
-    "れた"
+    'わたし',
+    '轍',
+    'なっ'
 ]
 
 
-fps=30
+fps=29.97
 if __name__=="__main__":
     d=list(getdict2())
     if len(sys.argv)<2:
         dict_to_srt(d,"1.srt")
         writetoml(d,"1.toml")
     else:
-        writetoml(d,os.path.join(lyrics_outdir,"%s_jp.toml"%sys.argv[1]),0.00001)
+        writetoml(d,os.path.join(lyrics_outdir,"%s_jp.toml"%sys.argv[1]),0.000001)

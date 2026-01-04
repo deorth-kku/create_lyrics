@@ -56,13 +56,17 @@ from utils import ask_for_num,ask_yes_no,conv_pv_num
 
 def gettomlpath(title:str,lang="jp")->str:
     toml_path=None
-    for part in title.split():
-        for dir,pvid,name in search_song(part):
-            print("matched",dir,pvid,name)
-            toml_path=os.path.join(lyrics_outdir,"%s_%s.toml"%(pvid.split("_")[1],lang))
-            break
-        if toml_path!=None:
-            break
+    try:
+        num=int(title)
+        toml_path=os.path.join(lyrics_outdir,"%d_%s.toml"%(num,lang))
+    except:
+        for part in title.split():
+            for dir,pvid,name in search_song(part):
+                print("matched",dir,pvid,name)
+                toml_path=os.path.join(lyrics_outdir,"%s_%s.toml"%(pvid.split("_")[1],lang))
+                break
+            if toml_path!=None:
+                break
     if toml_path==None:
         print("not found")
         sys.exit(1)
