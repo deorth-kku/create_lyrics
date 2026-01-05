@@ -6,6 +6,18 @@ import os,sys
 
 import re
 from typing_tube import strip_ruby
+import unicodedata
+
+
+INVISIBLE = {
+    '\u200b',  # zero width space
+    '\u200c',
+    '\u200d',
+    '\ufeff',  # BOM
+}
+
+def remove_invisible(s: str) -> str:
+    return ''.join(ch for ch in s if ch not in INVISIBLE)
 
 pattern = re.compile(r"(\d+:\d+:\d+\.\d+)\s+-->\s+(\d+:\d+:\d+\.\d+)")
 def vtt_to_toml(text:str, toml_path:str,offset:float=0):
@@ -13,6 +25,7 @@ def vtt_to_toml(text:str, toml_path:str,offset:float=0):
     entries = {}
     i = 0
     end_time=""
+    last=""
     while i < len(lines):
         match = pattern.search(lines[i])
         if match:
@@ -25,9 +38,15 @@ def vtt_to_toml(text:str, toml_path:str,offset:float=0):
             
             cur=[]
             while i + 1 < len(lines) and lines[i+1].strip()!="":
-                cur.append(lines[i+1].strip())
+                cur.append(remove_invisible(lines[i+1].strip()))
                 i += 1
-            entries[start_time]=" ".join(cur)
+            if len(cur)>1:
+                print("warning: multiline detected")
+            this=" ".join(cur)
+            if this == last:
+                continue
+            last=this
+            entries[start_time]=this
             
         i += 1
 

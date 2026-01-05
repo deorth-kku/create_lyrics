@@ -19,9 +19,14 @@ def offsetgen(d:lyrics,offset:float)->lyrics:
     for k,v in d:
         yield k+offset,v
 
+from toml2srt import readtoml
+from typing_tube import writetoml
 if __name__ == "__main__":
-    with open(sys.argv[1], "rb") as f:
-        data = tomllib.load(f)
-    for i in data["lyrics"]:
-        t:time=i["time"]
-        print(offset(t,float(sys.argv[2])))
+    it=readtoml(sys.argv[1])
+    if len(sys.argv)>2:
+        delta=float(sys.argv[2])
+        it=list(it)
+        writetoml(it,sys.argv[1],delta)
+    elif len(sys.argv)>3:
+        delta=float(sys.argv[3])
+        writetoml(it,sys.argv[2],delta)

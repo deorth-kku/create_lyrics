@@ -2,7 +2,6 @@ from extract_timing import format_time
 from search_song import search_song
 import os,sys
 import requests
-from collections.abc import Generator
 
 def parse_file(text:str)->tuple[str,dict[float,str]]:
     m={}
@@ -127,7 +126,10 @@ def writetoml(lrc:lyrics,toml_path:str,offset:float=0):
     with open(toml_path, 'w', encoding='utf-8') as f:
         f.write("lyrics = [\n")
         for k,v in lrc:
-            f.write(f'    {{time = {format_time((k+offset)*100000)}, text = "{strip_ruby(v).replace('"',r'\"')}"}},\n')
+            k=k+offset
+            if k<0:
+                continue
+            f.write(f'    {{time = {format_time(k*100000)}, text = "{strip_ruby(v).replace('"',r'\"')}"}},\n')
         f.write("]\n")
     print('write to file "%s"'%toml_path)
 

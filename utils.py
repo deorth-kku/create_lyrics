@@ -44,7 +44,7 @@ def read_offset(file:str)->float:
         ops = pydsc.from_stream(stream, game_hint='FT')
         for op in ops:
             if op.op_name == 'MUSIC_PLAY':
-                return -float(time)
+                return float(time)
             elif op.op_name == 'TIME':
                 time=float(op.param_values[0])/100000
     return time   
