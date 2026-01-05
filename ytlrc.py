@@ -3,8 +3,6 @@
 import yt_dlp
 import requests
 import os,sys
-import html
-
 
 import re
 from typing_tube import strip_ruby
@@ -24,12 +22,13 @@ def vtt_to_toml(text:str, toml_path:str,offset:float=0):
             else:
                 entries[end_time]=""
                 end_time=match.group(2)
-            # 下一行即为字幕文本
-            if i + 1 < len(lines) and lines[i+1].strip():
-                text = lines[i+1].strip()
-                entries[start_time]=text
+            
+            cur=[]
+            while i + 1 < len(lines) and lines[i+1].strip()!="":
+                cur.append(lines[i+1].strip())
                 i += 1
-
+            entries[start_time]=" ".join(cur)
+            
         i += 1
 
     with open(toml_path, 'w', encoding='utf-8') as f:
@@ -66,21 +65,32 @@ ydl_opts = {
     "proxy": proxy
 }
 
-
-def ytlrc(url)->tuple[str,dict[str,str]]:
+from collections.abc import Generator
+def ytlrc(url)->tuple[str,Generator[tuple[str,str]]]:
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
     if 'subtitles' not in info:
         raise Exception("no subtitles")
-    m={}
-    for lang in info['subtitles']:
-        for format in info['subtitles'][lang]:
+    
+    def func():
+        for lang in info['subtitles']:
+            newlang=getlang(lang)
+            if newlang==None:
+                continue
+            for format in info['subtitles'][lang]:
                 fmt = format['ext']
-                if fmt == "vtt":
+                if fmt != "vtt":
+                    continue
+                for _ in range(10):
                     rsp=requests.get(format['url'],proxies=proxies)
-                    m[lang]=rsp.text
-    return info['title'],m
+                    if rsp.status_code==200:
+                        break
+                if rsp.status_code!=200:
+                    raise Exception("not 200 code %d"%rsp.status_code)
+                yield newlang,rsp.text
+    it=func()
+    return info["title"],it
 
 from typing_tube import gettomlpath
 
@@ -110,10 +120,7 @@ if __name__=="__main__":
         title=sys.argv[2]
     if len(sys.argv)>3:
         offset=float(sys.argv[3])
-    for lang,vtt in lyrics.items():
-        lang=getlang(lang)
-        if lang==None:
-            continue
+    for lang,vtt in lyrics:
         toml=gettomlpath(title,lang)
         vtt_to_toml(vtt, toml,offset=offset)
         print("write file",toml)
