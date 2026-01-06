@@ -21,8 +21,6 @@ def read_lrc(path: str) -> lyrics:
 
             # 去掉所有时间标签后剩下的就是歌词
             text = time_re.sub("", line).strip()
-            if not text:
-                continue
 
             for m, s in matches:
                 ts = int(m) * 60 + float(s)

@@ -4,6 +4,7 @@ from collections.abc import Generator
 
 
 lyrics=Generator[tuple[float,str]]
+lyricsOffsetX=Generator[tuple[float,str,float,int]]
 
 def conv_pv_num(pv:str)->int:
     if pv.startswith("pv_"):

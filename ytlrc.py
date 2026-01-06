@@ -19,8 +19,14 @@ INVISIBLE = {
 def remove_invisible(s: str) -> str:
     return ''.join(ch for ch in s if ch not in INVISIBLE)
 
+
+from utils import ask_yes_no
+
 pattern = re.compile(r"(\d+:\d+:\d+\.\d+)\s+-->\s+(\d+:\d+:\d+\.\d+)")
 def vtt_to_toml(text:str, toml_path:str,offset:float=0):
+    if os.path.exists(toml_path):
+        if not ask_yes_no("%s exists, overwrite?"%toml_path):
+            sys.exit(1)
     lines=text.splitlines()
     entries = {}
     i = 0

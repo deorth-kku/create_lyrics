@@ -69,9 +69,6 @@ def gettomlpath(title:str,lang="jp")->str:
     if toml_path==None:
         print("not found")
         sys.exit(1)
-    if os.path.exists(toml_path):
-        if not ask_yes_no("%s exists, overwrite?"%toml_path):
-            sys.exit(1)
     return toml_path
 
 def getlrc(num:str)->str:
