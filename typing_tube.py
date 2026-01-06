@@ -109,15 +109,17 @@ def get_title(pvnum:int)->str:
 
 from utils import conv_pv_num,find_offset,lyrics
 
-def writetoml(lrc:lyrics,toml_path:str,offset:float=0):
-    if offset==0:
+def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
+    if offset==None:
         try:
             num=int(os.path.basename(toml_path).split("_")[0])
             offset=find_offset(num)
             if offset!=0:
                 print("writing with auto found offset %f"%offset)
         except:
-            pass
+            offset=0
+    else:
+        offset=0
     if type(lrc)==dict:
         lrc=lrc.items()
     if os.path.exists(toml_path):
