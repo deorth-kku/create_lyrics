@@ -1,4 +1,3 @@
-from extract_timing import format_time
 from search_song import search_song
 import os,sys
 import requests
@@ -56,7 +55,12 @@ from utils import ask_for_num,ask_yes_no,conv_pv_num
 def gettomlpath(title:str,lang="jp")->str:
     toml_path=None
     try:
-        num=int(title)
+        if type(title)==str:
+            num=int(title)
+        elif type(title)==int:
+            num=title
+        else:
+            raise TypeError()
         toml_path=os.path.join(lyrics_outdir,"%d_%s.toml"%(num,lang))
     except:
         for part in title.split():
@@ -104,7 +108,10 @@ def get_title(pvnum:int)->str:
             if name:
                 return name
 
-from utils import conv_pv_num,find_offset,lyrics
+from utils import conv_pv_num,find_offset,lyrics,format_float
+
+
+
 
 def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
     if offset==None:
@@ -128,11 +135,16 @@ def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
             return
     with open(toml_path, 'w', encoding='utf-8') as f:
         f.write("lyrics = [\n")
+        last=""
         for k,v in lrc:
+            if v==last:
+                continue
+            else:
+                last=v
             k=k+offset
             if k<0:
                 continue
-            f.write(f'    {{time = {format_time(k*100000)}, text = "{strip_ruby(v).replace('"',r'\"')}"}},\n')
+            f.write(f'    {{time = {format_float(k)}, text = "{strip_ruby(v).replace('"',r'\"')}"}},\n')
         f.write("]\n")
     print('write to file "%s"'%toml_path)
 

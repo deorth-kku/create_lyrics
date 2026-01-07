@@ -4,7 +4,7 @@
 
 from lrc2toml import read_lrc
 from utils import lyrics,lyricsOffsetX
-from typing_tube import format_time
+from typing_tube import format_float
 import sys
 from typing_tube import gettomlpath
 from utils import ask_yes_no
@@ -91,7 +91,7 @@ def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
                 alpha=f' color = "FFFFFF{alpha:02X}",'
             else:
                 alpha=""
-            f.write(f'    {{time = {format_time(k*100000)}, text = "{v.replace('"',r'\"')}", offset_x = {offx},{alpha} alignment = 1.0 }},\n')
+            f.write(f'    {{time = {format_float(k)}, text = "{v.replace('"',r'\"')}", offset_x = {offx},{alpha} alignment = 1.0 }},\n')
         f.write("]\n")
     print('write to file "%s"'%toml_path)
 

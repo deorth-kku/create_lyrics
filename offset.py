@@ -25,8 +25,9 @@ if __name__ == "__main__":
     it=readtoml(sys.argv[1])
     if len(sys.argv)==3:
         delta=float(sys.argv[2])
-        it=list(it)
-        writetoml(it,sys.argv[1],delta)
+        it=dict(it)
+        items = sorted(it.items(), key=lambda x: x[0])
+        writetoml(items,sys.argv[1],delta)
     elif len(sys.argv)>3:
         delta=float(sys.argv[3])
         writetoml(it,sys.argv[2],delta)

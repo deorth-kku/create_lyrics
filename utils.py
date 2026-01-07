@@ -1,7 +1,7 @@
 
 import os
 from collections.abc import Generator
-
+from pydiva.util.divatime import DivaTime
 
 lyrics=Generator[tuple[float,str]]
 lyricsOffsetX=Generator[tuple[float,str,float,int]]
@@ -62,3 +62,23 @@ def find_offset(num:int)->float:
             continue
         return read_offset(dsc)
     return 0
+
+
+def format_time(ticks: DivaTime) -> str:
+    # 每个 tick = 1/100000 秒
+    total_seconds = ticks / 100000
+    
+    hours = int(total_seconds // 3600)
+    total_seconds %= 3600
+    minutes = int(total_seconds // 60)
+    total_seconds %= 60
+    
+    seconds = int(total_seconds)
+    fraction = int((total_seconds - seconds) * 100000)
+    
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}.{fraction:05d}"
+
+
+def format_float(f:float)->str:
+    return format_time(f*100000)
+    

@@ -59,14 +59,11 @@ def parsevtt(text:str)->lyrics:
 def vtt_to_toml(text:str, toml_path:str,offset:float=None):
     return writetoml(parsevtt(text),toml_path,offset)
 
-from typing_tube import format_time
+from typing_tube import format_float
 
 def stroffset(t:str,offset:float)->str:
-    parts=t.split(":")
-    offset+=float(parts[2])
-    offset+=float(parts[1])*60
-    offset+=float(parts[0])*3600
-    return format_time(offset*100000)
+    offset+=parsetime(t)
+    return format_float(offset)
 
 
 proxy = "http://proxy.lan:1080"
