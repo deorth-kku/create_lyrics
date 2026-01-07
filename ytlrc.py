@@ -39,9 +39,10 @@ def parsevtt(text:str)->lyrics:
             if end_time== "" or  start_time == end_time:
                 end_time=match.group(2)
             else:
-                if end_time<start_time:
+                new_end_time=match.group(2)
+                if end_time<start_time or end_time>new_end_time:
                     yield parsetime(end_time),""
-                end_time=match.group(2)
+                end_time=new_end_time
             
             cur=[]
             while i + 1 < len(lines) and lines[i+1].strip()!="":
