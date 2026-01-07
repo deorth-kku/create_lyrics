@@ -23,7 +23,7 @@ from toml2srt import readtoml
 from typing_tube import writetoml
 if __name__ == "__main__":
     it=readtoml(sys.argv[1])
-    if len(sys.argv)>2:
+    if len(sys.argv)==3:
         delta=float(sys.argv[2])
         it=list(it)
         writetoml(it,sys.argv[1],delta)

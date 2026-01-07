@@ -114,9 +114,13 @@ def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
             if offset!=0:
                 print("writing with auto found offset %f"%offset)
         except:
+            print("cannot find auto offset")
             offset=0
+    elif type(offset)==float:
+        pass
     else:
         offset=0
+
     if type(lrc)==dict:
         lrc=lrc.items()
     if os.path.exists(toml_path):

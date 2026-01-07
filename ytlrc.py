@@ -19,15 +19,16 @@ def remove_invisible(s: str) -> str:
     return ''.join(ch for ch in s if ch not in INVISIBLE)
 
 
-from utils import ask_yes_no
-
+from utils import lyrics
+from typing_tube import writetoml
 pattern = re.compile(r"(\d+:\d+:\d+\.\d+)\s+-->\s+(\d+:\d+:\d+\.\d+)")
-def vtt_to_toml(text:str, toml_path:str,offset:float=0):
-    if os.path.exists(toml_path):
-        if not ask_yes_no("%s exists, overwrite?"%toml_path):
-            sys.exit(1)
+
+def parsetime(t:str)->float:
+    h,m,s=t.split(":")
+    return float(h)*3600+float(m)*60+float(s)
+
+def parsevtt(text:str)->lyrics:
     lines=text.splitlines()
-    entries = {}
     i = 0
     end_time=""
     last=""
@@ -38,7 +39,7 @@ def vtt_to_toml(text:str, toml_path:str,offset:float=0):
             if end_time== "" or  start_time == end_time:
                 end_time=match.group(2)
             else:
-                entries[end_time]=""
+                yield parsetime(end_time),""
                 end_time=match.group(2)
             
             cur=[]
@@ -51,23 +52,12 @@ def vtt_to_toml(text:str, toml_path:str,offset:float=0):
             if this == last:
                 continue
             last=this
-            entries[start_time]=this
+            yield parsetime(start_time),this
             
         i += 1
 
-    with open(toml_path, 'w', encoding='utf-8') as f:
-        f.write("lyrics = [\n")
-        lasttext=None
-        for t, text in entries.items():
-            if offset!=0:
-                t=stroffset(t,offset)
-            text=strip_ruby(text)
-            if text==lasttext:
-                continue
-            else:
-                lasttext=text
-            f.write(f'    {{time = {t}, text = "{text.replace('"',r'\"')}"}},\n')
-        f.write("]\n")
+def vtt_to_toml(text:str, toml_path:str,offset:float=None):
+    return writetoml(parsevtt(text),toml_path,offset)
 
 from typing_tube import format_time
 
@@ -126,7 +116,8 @@ langmap={
     "zh-cn":"cn",
     "zh-hans":"cn",
     "zh-tw":"tw",
-    "zh-hant":"tw"
+    "zh-hant":"tw",
+    "zh-hk":"tw"
 }
 
 def getlang(code:str)->str:
@@ -144,7 +135,7 @@ def getlang(code:str)->str:
 
 if __name__=="__main__":
     title,lyrics=ytlrc(sys.argv[1])
-    offset=0
+    offset=None
     if len(sys.argv)>2:
         title=sys.argv[2]
     if len(sys.argv)>3:
