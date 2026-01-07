@@ -10,13 +10,12 @@ def parse_file(text:str)->tuple[str,dict[float,str]]:
     for line in lines:
         line=line.strip()
         parts=line.split("\t")
+        tstr=parts[0]
         if len(parts)==1:
-            tstr=parts[0]
             line=""
         elif parts[1]=="end":
-            continue
+            line=""
         else:
-            tstr=parts[0]
             line=parts[1]
         m[float(tstr)]=line
     return head,m
@@ -180,7 +179,7 @@ if __name__=="__main__":
     else:
         tt_id=next(iter(songlist))
     _,lrc=parse_file(getlrc(tt_id))
-    toml_path=os.path.join(lyrics_outdir,"%d_jp.toml"%input_num)
+    toml_path=gettomlpath(input_num)
     offset=float(0)
     if len(sys.argv)>3 and sys.argv[3][0] in ('+','-'):
         offset=float(sys.argv[3])
