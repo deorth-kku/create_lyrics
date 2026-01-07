@@ -39,7 +39,8 @@ def parsevtt(text:str)->lyrics:
             if end_time== "" or  start_time == end_time:
                 end_time=match.group(2)
             else:
-                yield parsetime(end_time),""
+                if end_time<start_time:
+                    yield parsetime(end_time),""
                 end_time=match.group(2)
             
             cur=[]
@@ -55,6 +56,7 @@ def parsevtt(text:str)->lyrics:
             yield parsetime(start_time),this
             
         i += 1
+    yield parsetime(end_time),""
 
 def vtt_to_toml(text:str, toml_path:str,offset:float=None):
     return writetoml(parsevtt(text),toml_path,offset)
@@ -109,12 +111,13 @@ langmap={
     "ja":"jp",
     "en":"en",
     "ko":"ko",
-    "zh":"cn",
+    
     "zh-cn":"cn",
     "zh-hans":"cn",
     "zh-tw":"tw",
     "zh-hant":"tw",
-    "zh-hk":"tw"
+    "zh-hk":"tw",
+    "zh":"cn",
 }
 
 def getlang(code:str)->str:

@@ -7,10 +7,14 @@ import os
 
 def has_order_error(it:lyrics)->Generator[str]:
     last=0
-    for k,_ in it:
+    laststr=""
+    for k,v in it:
         if k<last:
             yield format_float(k)
         last=k
+        laststr=v
+    if laststr!="":
+        yield format_float(last)
 
 
 
