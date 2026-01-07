@@ -6,7 +6,6 @@ import os,sys
 
 import re
 from typing_tube import strip_ruby
-import unicodedata
 
 
 INVISIBLE = {
@@ -124,6 +123,10 @@ langmap={
     "en":"en",
     "ko":"ko",
     "zh":"cn",
+    "zh-cn":"cn",
+    "zh-hans":"cn",
+    "zh-tw":"tw",
+    "zh-hant":"tw"
 }
 
 def getlang(code:str)->str:
@@ -132,6 +135,7 @@ def getlang(code:str)->str:
         return langmap[code]
     for k,v in langmap.items():
         if code.startswith(k):
+            print("warning: matching %s as %s"%(code,k))
             return v
     print("cannot find lang:%s, skipping"%code)
     return None
