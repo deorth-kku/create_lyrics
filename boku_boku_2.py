@@ -45,7 +45,7 @@ def genlongline(last:float,start:float,end:float,long:str)->lyricsOffsetX:
         else:
             text=long[i:]
         if i>0:
-            for j in range(1,CHAR_SPLIT):
+            for j in range(CHAR_SPLIT-1,0,-1):
                 yield i*step+start-(step/CHAR_SPLIT*j),text,CHAR_SIZE/CHAR_SPLIT*j,0
 
         yield i*step+start,text,0,0
