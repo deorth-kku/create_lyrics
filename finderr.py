@@ -10,11 +10,11 @@ def has_order_error(it:lyrics)->Generator[str]:
     laststr=""
     for k,v in it:
         if k<last:
-            yield format_float(k)
+            yield "timestamp decrease at %s, last %s"%(format_float(k),format_float(last))
         last=k
         laststr=v
     if laststr!="":
-        yield format_float(last)
+        yield "didn't clear text at the end %s"%format_float(last)
 
 
 
