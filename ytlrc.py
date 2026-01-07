@@ -47,6 +47,9 @@ def parsevtt(text:str)->lyrics:
             while i + 1 < len(lines) and lines[i+1].strip()!="":
                 cur.append(remove_invisible(lines[i+1].strip()))
                 i += 1
+            if len(cur)==0:
+                i+=1
+                continue
             if len(cur)>1:
                 print("warning: multiline detected")
             this=" ".join(cur)

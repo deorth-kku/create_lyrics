@@ -2,10 +2,12 @@ from mml import diva_db_file
 import os,sys
 from collections.abc import Generator
 
-from config import mod_dir
+from config import mod_dir,custom_skip
 
 def search_song(name:str)->Generator[tuple[str,str,str]]:
     for dir in os.listdir(mod_dir):
+        if dir in custom_skip:
+            continue
         full=os.path.join(mod_dir,dir,r'rom\mod_pv_db.txt')
         if os.path.exists(full):
             db:dict[str,str]=diva_db_file(full)
