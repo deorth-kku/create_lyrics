@@ -9,12 +9,20 @@ from mml import diva_db_file
 
 TOLERANCE=0.2
 
-def haserror(it:lyrics,songlen:float)->Generator[str]:
+ASCII_THRESHOLD=0.5
+
+def haserror(it:lyrics,songlen:float,code:str)->Generator[str]:
+    char_total=0
+    ascii=0
     last=0
     laststr=""
     for k,v in it:
         if k<last:
             yield "timestamp decrease at %s, last %s"%(format_float(k),format_float(last))
+        for char in v:
+            char_total+=1
+            if char.isascii():
+                ascii+=1
         last=k
         laststr=v
     if laststr!="":
@@ -22,6 +30,9 @@ def haserror(it:lyrics,songlen:float)->Generator[str]:
     
     if last>songlen*(1+TOLERANCE) or last<songlen*(1-TOLERANCE):
         yield "song length didn't match: lrc:%s, ogg:%s"%(format_float(last),format_float(songlen))
+
+    if code=="jp" and ascii>char_total*ASCII_THRESHOLD:
+        yield "too many ascii char"
 
 def readogglen(file:str)->float:
     tag = TinyTag.get(file)
@@ -52,12 +63,19 @@ def findogg(input_pv:int)->str:
 
 if __name__== "__main__":
     for file in os.listdir(lyrics_outdir):
-        pv_num=int(file.split("_")[0])
+        parts=file.split("_")
+        if len(parts)==1:
+            langcode=""
+            pv_num=int(file.split(".")[0])
+        else:
+            langcode=parts[1].split(".")[0]
+            pv_num=int(parts[0])
+
         file=os.path.join(lyrics_outdir,file)
         it=readtoml(file)
         ogglen=readogglen(findogg(pv_num))
         try:
-            errs=list(haserror(it,ogglen))
+            errs=list(haserror(it,ogglen,langcode))
         except Exception as e:
             print("%s has format error %s"%(file,e))
             continue

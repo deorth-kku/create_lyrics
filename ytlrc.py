@@ -114,7 +114,7 @@ from typing_tube import gettomlpath
 langmap={
     "ja":"jp",
     "en":"en",
-    "ko":"ko",
+    "ko":"kr",
     
     "zh-cn":"cn",
     "zh-hans":"cn",

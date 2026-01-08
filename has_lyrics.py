@@ -29,7 +29,7 @@ def has_lyrics_all()->Generator[tuple[str,str,str]]:
         if not os.path.exists(lrcdir):
             continue
         for lrc in os.listdir(lrcdir):
-            toml_lrc.add(lrc.split("_")[0])
+            toml_lrc.add(lrc.split("_")[0].split(".")[0])
     for dir in os.listdir(mod_dir):
         full=os.path.join(mod_dir,dir,r'rom\mod_pv_db.txt')
         if not os.path.exists(full):
