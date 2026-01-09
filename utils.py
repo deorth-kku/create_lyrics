@@ -80,5 +80,5 @@ def format_time(ticks: DivaTime) -> str:
 
 
 def format_float(f:float)->str:
-    return format_time(f*100000)
+    return format_time(round(f*100000))
     
