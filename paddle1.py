@@ -20,6 +20,7 @@ def dopaddleocr(files:list[str],outdir:str):
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
+    device='gpu:0',
     lang="japan")
     result = ocr.predict_iter(
         input=files)
