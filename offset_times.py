@@ -14,7 +14,7 @@ from io import BytesIO
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from pydiva import pydsc
 
-def offset_dsc_times(input_file: str, output_file: str, offset: int) -> None:
+def offset_dsc_times(input_file: str, output_file: str, offset: int,skip_music_start = False) -> None:
     """
     Read a DSC file, offset all TIME operations after MUSIC_PLAY by the given amount,
     and write to a new file.
@@ -36,14 +36,19 @@ def offset_dsc_times(input_file: str, output_file: str, offset: int) -> None:
     
     # Find MUSIC_PLAY index
     music_play_idx = None
-    for i, op in enumerate(ops):
-        if op.op_name == 'MUSIC_PLAY':
-            music_play_idx = i
-            break
-    
-    if music_play_idx is None:
-        print("ERROR: MUSIC_PLAY not found in DSC file")
-        return
+    if skip_music_start:
+        for i, op in enumerate(ops):
+            if op.op_name == 'MUSIC_PLAY':
+                music_play_idx = i
+                break
+                
+        if music_play_idx is None:
+            print("ERROR: MUSIC_PLAY not found in DSC file")
+            return
+        
+    else:
+        music_play_idx = 0
+        
     
     print(f"MUSIC_PLAY found at index {music_play_idx}")
     
@@ -92,4 +97,4 @@ if __name__ == '__main__':
     output_file = sys.argv[2]
     offset = int(sys.argv[3])
     
-    offset_dsc_times(input_file, output_file, offset)
+    offset_dsc_times(input_file, output_file, offset,True)
