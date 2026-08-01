@@ -1,6 +1,7 @@
 from search_song import search_song
 import os,sys
 import requests
+from html.parser import HTMLParser
 
 def parse_file(text:str)->tuple[str,dict[float,str]]:
     m={}
@@ -86,16 +87,63 @@ def getlrc(num:str)->str:
     return lyrics
 
 from urllib.parse import quote
-urlregex=re.compile(r'<a href="/movie/show/[0-9]{5}">.*?</a>')
-def net_search_song(name:str)->dict[str,str]:
-    url="https://typing-tube.net/?q="+quote(name)
-    m=dict()
-    for page in range(1,100):
-        rsp=requests.get(url+"&page=%d"%page)
-        for href in urlregex.findall(rsp.text):
-            m[href[21:27]]=href[28:-4]
-        if r'→</a>' not in rsp.text:
+
+
+def _attrs_dict(attrs):
+    return {k: v for k, v in attrs}
+
+
+class _MovieCardParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.cards: list[tuple[str, str]] = []  # (movie_num, title)
+        self._in_title = False
+        self._current_num: str | None = None
+        self._title_buf: list[str] = []
+        self._title_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a" and any(k == "href" and v.startswith("/movie/show/") for k, v in attrs):
+            self._current_num = _attrs_dict(attrs)["href"][len("/movie/show/"):]
+            self._title_buf = []
+            self._in_title = False
+            self._title_depth = 0
+        if self._current_num and tag == "span" and any(k == "class" and v == "movie-title-text" for k, v in attrs):
+            self._in_title = True
+            self._title_buf = []
+            self._title_depth = 1
+
+    def handle_endtag(self, tag):
+        if self._in_title and tag == "span":
+            self._title_depth -= 1
+            if self._title_depth == 0:
+                self._in_title = False
+                title = "".join(self._title_buf).strip()
+                if self._current_num and title:
+                    self.cards.append((self._current_num, title))
+
+    def handle_data(self, data):
+        if self._in_title:
+            self._title_buf.append(data)
+
+
+def _has_more_pages(html_text: str) -> bool:
+    return "Page " in html_text and "disabled" not in html_text.split("disabled", 1)[1] if "disabled" in html_text else True
+
+
+def net_search_song(name: str) -> dict[str, str]:
+    url = "https://typing-tube.net/?q=" + quote(name)
+    m: dict[str, str] = {}
+    page = 1
+    while page <= 100:
+        rsp = requests.get(url + "&page=%d" % page)
+        parser = _MovieCardParser()
+        parser.feed(rsp.text)
+        for num, title in parser.cards:
+            m[num] = title
+        if not _has_more_pages(rsp.text):
             break
+        page += 1
     return m
 
 from mml import diva_db_file
