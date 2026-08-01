@@ -74,13 +74,16 @@ def gettomlpath(title:str,lang="jp")->str:
         sys.exit(1)
     return toml_path
 
+from fetch_lyrics import fetch_page,fetch_lyrics_raw,decrypt_lyrics
+
 def getlrc(num:str)->str:
-    rsp=requests.post("https://typing-tube.net/movie/lyrics/"+num,headers={
-        "Origin": "https://typing-tube.net",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0",
-        "Referer": "https://typing-tube.net/movie/show/"+num
-    })
-    return rsp.text
+    game_token, lyrics_key, csrf_token, cookies = fetch_page(num)
+    data = fetch_lyrics_raw(num, game_token, csrf_token, cookies)
+    encrypted = data["encrypted"]
+    iv = data["iv"]
+    auth_tag = data["auth_tag"]
+    lyrics = decrypt_lyrics(lyrics_key, encrypted, iv, auth_tag)
+    return lyrics
 
 from urllib.parse import quote
 urlregex=re.compile(r'<a href="/movie/show/[0-9]{5}">.*?</a>')
