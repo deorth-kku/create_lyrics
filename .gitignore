@@ -6,5 +6,5 @@ __pycache__
 .vscode
 *.json
 *.srt
-test.py
+test*.py
 .venv/

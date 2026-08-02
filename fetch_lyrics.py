@@ -25,7 +25,15 @@ def fetch_page(movie_id):
     lyrics_key = soup.find("meta", attrs={"name": "lyrics-key"})["content"]
     csrf_token = soup.find("meta", attrs={"name": "csrf-token"})["content"]
 
-    return game_token, lyrics_key, csrf_token, resp.cookies
+    # 从 og:image 缩略图 URL 中解析 YouTube Video ID
+    og_image = soup.find("meta", attrs={"property": "og:image"})
+    yt_id = None
+    if og_image and og_image["content"]:
+        m = re.search(r"/vi/([A-Za-z0-9_-]{11})", og_image["content"])
+        if m:
+            yt_id = m.group(1)
+
+    return game_token, lyrics_key, csrf_token, resp.cookies, yt_id
 
 
 def fetch_lyrics_raw(movie_id, game_token, csrf_token, cookies):
@@ -70,7 +78,7 @@ def main():
         sys.exit(1)
 
     print(f"[1/4] 请求页面 https://typing-tube.net/movie/show/{movie_id} ...")
-    game_token, lyrics_key, csrf_token, cookies = fetch_page(movie_id)
+    game_token, lyrics_key, csrf_token, cookies, _yt_id = fetch_page(movie_id)
     print(f"  game-token: {game_token}")
     print(f"  lyrics-key: {lyrics_key}")
     print(f"  csrf-token: {csrf_token}")

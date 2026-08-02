@@ -78,13 +78,17 @@ def gettomlpath(title:str,lang="jp")->str:
 from fetch_lyrics import fetch_page,fetch_lyrics_raw,decrypt_lyrics
 
 def getlrc(num:str)->str:
-    game_token, lyrics_key, csrf_token, cookies = fetch_page(num)
+    lrc,_=getlrc_ex(num)
+    return lrc
+
+def getlrc_ex(num:str)->tuple[str,str]:
+    game_token, lyrics_key, csrf_token, cookies, _yt_id = fetch_page(num)
     data = fetch_lyrics_raw(num, game_token, csrf_token, cookies)
     encrypted = data["encrypted"]
     iv = data["iv"]
     auth_tag = data["auth_tag"]
     lyrics = decrypt_lyrics(lyrics_key, encrypted, iv, auth_tag)
-    return lyrics
+    return lyrics,_yt_id
 
 from urllib.parse import quote
 
@@ -229,11 +233,19 @@ if __name__=="__main__":
         tt_id:str=mapdict[ask_for_num("please select a title")]
     else:
         tt_id=next(iter(songlist))
-    _,lrc=parse_file(getlrc(tt_id))
+    lrcstr,yt_id=getlrc_ex(tt_id)
+    _,lrc=parse_file(lrcstr)
     toml_path=gettomlpath(input_num)
     offset=float(0)
     if len(sys.argv)>3 and sys.argv[3][0] in ('+','-'):
         offset=float(sys.argv[3])
     writetoml(lrc,toml_path,offset=offset)
+
+    usm_path=os.path.dirname(lyrics_outdir) + f"/rom/movie/pv_{input_num}.usm"
+    if not os.path.exists(usm_path):
+        from yt_dlp_to_usm import yt_dlp_to_usm
+        yt_dlp_to_usm("https://youtu.be/"+yt_id,output=usm_path)
+
+
     
 
