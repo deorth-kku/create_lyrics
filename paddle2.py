@@ -180,64 +180,41 @@ def dict_to_srt(d: lyrics, filename: str):
 
 from offset import offsetgen
 
-lines_lrc='''aa , iya ni nacchau na
-migi mo hidari mo utsurona me de waratteru
-kyou no shokutaku ni wa shigoto tesuto sekentei no furukoosu
+lines_lrc='''薄らいだ顔を見せて 
+「ここはどこ？」君が呟いた 
+迷子のカタチ　鈴の音　炎　揺らいで 
+刻む足跡　影を　踏み潰すような
+泳いで泳いで森の中 
+隠れては罪を数えてる
 
-aa , bakabakashii ya
-mireba ai dano koi dano akutoku shuukyou
-sonna mon sugatta tte asu no meshi mo kuenaize
+「この生まれてきた私をどうかどうか許して」と 
+揺れる体　この生命を　全て捧げていくの 
+それは刻まれた言葉を一つ一つ与えても 
+永久に許されることなど･･･ 
+消えないと知りながら　祈り捧げ続けた
+太陽が夢を見続けて 
+笑う満月が嘘を呟いた
+「ねぇ？貴方を殺して私を眠らせてよ」 
+騒ぐ鳴き声　黒を　塗り潰すような
+泳いで　泳いで　霧の中 
+求めては罪を犯してく
 
-dokoka no souriga uwaki shita da toka
-ano ko to aitsu ga dekiteru nda toka
-otanoshisou desuwane (wara)
+「この生まれてきた私をどうかどうか愛して」と 
+宿る心　この孤独が　全て奪っていくの 
+でも胸の中の鼓動を一つ一つ数えても 
+永久に愛されることなど 
+見えないと知りながら　嘆き探し続けた
 
-saa
-un deux trois odoreba
-kyou mo asu no fuan mo uso ni naru no
-"isso umarete konakerya"
-naiten nara te o hikuze
-
-baka ni natte utaeba
-jamana aitsu mo soitsu mo zenbu o sa wasurerareru no
-bokura umarete kita no wa omae no tame janai
-Fxxkin' world, I love you!
-
-aa , iya ni nacchau na
-doko mo kashiko mo nita yona mukuro de juutai
-sonna manegoto de anata wa ittai dare desu
-misekake no sei
-
-saa
-aiwonchuu o utaeba
-kimi no hoshii ai wa doko ni aru no
-"kitto itsuka wakaru kana"
-toikake wa uso makoto
-dandan
-aikyanduu ga fuete mo
-kokoro wa dounimo kou ni mo sa mitasarenai no
-"nani no tame ni umaretano"
-kotoba o nigosu imi ga wakannee nda
-
-nee
-chotto hitotsu kikasete yo
-ai mo kin mo doraggu mo zenbu aru kedo
-konna jidai ni umarete nani o nozomeba ii no
-kitto kotae nante mitsukaranakute mo
-kyou mo asu mo chikyuu wa korogaru noni
-yume o mirenai bokura wa
-ima inochi o kobanda
-rattara
-wan tsuu san de odoreba
-kyou mo asu mo zenbu uso ni naru no
-"isso umarete konakerya"
-naiten nara te o hikuze
-isso mayou koto nante nai kara
-kono chachina ondo no zenbu o sa wasuresarou ka
-nani mo monku wa nai darou
-kokora de owari Goodbye world, I loved you!
-tomenaide yo konna jidai wa aki akida
-
+嘘つく何かが落ち葉に積もる 
+子守唄　響く眠りにつくまで･･･
+私の中の声が一つ一つ消えていく 
+白く手を伸ばすあなたは何を見つめているの？
+「この生まれてきた私をどうかどうか許して」と 
+罪を数えてる私が罪を殺しているの 
+「もしも許されることなら･･･強く強く守って」と 
+そして蘇る私も罪を犯していくの 
+「この生まれてきた私を強く強く愛して」と 
+それは繰り返す想いを　消えないと知りながら祈り捧げ続けた
 '''
 blacklist=[
     "ない",
