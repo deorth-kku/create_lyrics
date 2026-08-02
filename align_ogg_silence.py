@@ -257,7 +257,6 @@ def align_ogg_silence(input_num: int, yt_id: str) -> None:
         print("  下载 WebM 音频...")
         try:
             webm_path = _download_webm_audio(yt_id)
-            webm_path = r"Z:\temp\100.webm"
         except Exception as e:
             print(f"  WebM 下载失败: {e}，跳过空白对齐")
             return
