@@ -180,124 +180,64 @@ def dict_to_srt(d: lyrics, filename: str):
 
 from offset import offsetgen
 
-lines_lrc='''鬼蜘蛛一族狐に攫われ
-悠久の苦痛耐え忍んできた
-許さん許さん許さん許さん
-命を乞うなぞさらさらしないが
-百代先まで怨んでやろうぞ
-貴様ら鬼だろ本物になれや
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
+lines_lrc='''aa , iya ni nacchau na
+migi mo hidari mo utsurona me de waratteru
+kyou no shokutaku ni wa shigoto tesuto sekentei no furukoosu
 
-今宵は月夜間奴隷の悲鳴を
-観賞している大名様たち
-さぁさぁ、ようこそおいでぇなすって
-高貴な見世物準備はいいかな？
+aa , bakabakashii ya
+mireba ai dano koi dano akutoku shuukyou
+sonna mon sugatta tte asu no meshi mo kuenaize
 
-ああああああああ…
-奴隷の叫びは井戸の奥にまで
-死なない程度にお前をいたぶる
-私の眼を見ろ「命をやろうか？」
+dokoka no souriga uwaki shita da toka
+ano ko to aitsu ga dekiteru nda toka
+otanoshisou desuwane (wara)
 
-ああああああああああああああああああああああ…
-私を許してどうか殺さずに　
-お家へ返してほんとに痛いの
+saa
+un deux trois odoreba
+kyou mo asu no fuan mo uso ni naru no
+"isso umarete konakerya"
+naiten nara te o hikuze
 
-ああああああああああああああああああああああ…
-痛いの痛いの痛いの痛いの
-#あああああああああああ…
-鬼蜘蛛一族狐に攫われ
-悠久の苦痛耐え忍んできた
-許さん許さん許さん許さん
-命を乞うなぞさらさらしないが
-百代先まで怨んでやろうぞ
-貴様ら鬼だろ本物になれや
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
+baka ni natte utaeba
+jamana aitsu mo soitsu mo zenbu o sa wasurerareru no
+bokura umarete kita no wa omae no tame janai
+Fxxkin' world, I love you!
 
-綺麗な指先生爪ひん剥き
-指の関節をペンチで潰そう
-方耳落としてお前にキスする
-痛いか？痛いか？もっと泣き叫べ
-客は歓ぶぞ興奮している
-そろそろ終盤お前の解体
-五月の黄泉沼死体の踊り場
-晒したハラワタ蛆虫みたいね
-ああああああああ…
-私を許して鬼の感情は
-戻れぬ自分へ見せしめついでさ
-ああああああああ…
-人を殺すたび私は濡れてる許して許して
-#あああああああああ
+aa , iya ni nacchau na
+doko mo kashiko mo nita yona mukuro de juutai
+sonna manegoto de anata wa ittai dare desu
+misekake no sei
 
-#私の苦しみお前にわかるか
-#私の悲しみお前にわかるか…
-私は死んだの？何も感じない
-屍抱きしめ後悔している
-うっすら貴様の顔がまだ見える
-一人で股座いじくり感じる
-こいつの頭は蛆虫沸いてる
-溶けた屍は蛆も集らずに
-私の体に気安く触るな
-気持ちいい気持ちいいはあぁ…
+saa
+aiwonchuu o utaeba
+kimi no hoshii ai wa doko ni aru no
+"kitto itsuka wakaru kana"
+toikake wa uso makoto
+dandan
+aikyanduu ga fuete mo
+kokoro wa dounimo kou ni mo sa mitasarenai no
+"nani no tame ni umaretano"
+kotoba o nigosu imi ga wakannee nda
 
-#終わりも近づき死にかけの君の
-#臓物引きずりだしてあげましょ？
-#お腹を拡げりゃ、桃色渦巻き
-#悲鳴も聞こえず放心状態。
-#ヌルヌルしていて錆びた釘の味。
-#ゾクゾクしてきて、イってしまいそう。
-#もう死んだかしら？断末魔の時。
-#私を呪って死んでいきなさい。
-鬼蜘蛛一族狐に攫われ
-悠久の苦痛耐え忍んできた
-許さん許さん許さん許さん
-#命を乞うなぞさらさらしないが
-百代先まで怨んでやろうぞ
-貴様ら鬼だろ本物になれや
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
-鬼蜘蛛一族狐に攫われ
-悠久の苦痛耐え忍んできた
-許さん許さん許さん許さん
-命を乞うなぞさらさらしないが
-百代先まで怨んでやろうぞ
-貴様ら鬼だろ本物になれや
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
+nee
+chotto hitotsu kikasete yo
+ai mo kin mo doraggu mo zenbu aru kedo
+konna jidai ni umarete nani o nozomeba ii no
+kitto kotae nante mitsukaranakute mo
+kyou mo asu mo chikyuu wa korogaru noni
+yume o mirenai bokura wa
+ima inochi o kobanda
+rattara
+wan tsuu san de odoreba
+kyou mo asu mo zenbu uso ni naru no
+"isso umarete konakerya"
+naiten nara te o hikuze
+isso mayou koto nante nai kara
+kono chachina ondo no zenbu o sa wasuresarou ka
+nani mo monku wa nai darou
+kokora de owari Goodbye world, I loved you!
+tomenaide yo konna jidai wa aki akida
 
-僕ハボウフラ君ノ傷ヲ
-蛆虫ノヨウニグチュグチュト啜ル
-愛シテ愛シテ愛シテ愛シテ
-何ダカ体ガ熱クナッテキタ
-僕ハボウフラ君ノ傷ヲ
-蛆虫ノヨウニグチュグチュト啜ル
-愛シテ愛シテ愛シテ愛シテ
-何ダカスゴク興奮シテキタ
-私もついに焼きが回ったのか
-殺したお前らが迎えに来てる
-私のお腹を拡げるつもりか？
-#どうぞご自由にさっさと殺して
-私は異常？こんな時にでも
-濡れてしまうの痛いの待ってる
-私の体は断末魔の時
-さぁさぁ、ようこそ鬼畜のどつぼへ
-鬼蜘蛛一族狐に攫われ
-悠久の苦痛耐え忍んできた
-許さん許さん許さん許さん
-#命を乞うなぞさらさらしないが
-百代先まで怨んでやろうぞ
-貴様ら鬼だろ本物になれや
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
-私の恨みでお前ら一族
-死んでも解けない鬼蜘蛛の恨み
-私を永遠崇めろ讃えろ
-さもなくばお前を呪い殺すぞ
-人間を食べるその異常な事
-#代々続けろさもなくば殺す
-鬼蜘蛛化かした狐を喰っちゃれ
-人喰いの末路私は知ってる
 '''
 blacklist=[
     "ない",
