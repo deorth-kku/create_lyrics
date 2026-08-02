@@ -250,12 +250,6 @@ if __name__=="__main__":
     else:
         print("usm existed")
 
-    # === OGG 空白对齐 ===
-    try:
-        from align_ogg_silence import align_ogg_silence
-        align_ogg_silence(input_num, yt_id)
-    except Exception as e:
-        print(f"  空白对齐失败: {e}")
     
 
 

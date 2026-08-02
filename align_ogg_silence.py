@@ -233,15 +233,15 @@ def align_ogg_silence(input_num: int, yt_id: str) -> None:
     bak_path = ogg_path + ".bak"
 
     # 1. 检查 OGG 是否存在，不存在则直接返回
-    if not os.path.exists(ogg_path):
-        print(f"  OGG 不存在：{ogg_path}，跳过空白对齐")
-        return
-    print(f"  OGG 存在：{ogg_path}")
-
     # 2. 始终使用 bak 为源（不存在则移动 ogg→bak）
     if not os.path.exists(bak_path):
-        shutil.move(ogg_path, bak_path)
-        print(f"  原 OGG 移动为 .bak: {bak_path}")
+        if not os.path.exists(ogg_path):
+            print(f"  OGG 不存在：{ogg_path}，跳过空白对齐")
+            return
+        else:
+            print(f"  OGG 存在：{ogg_path}")
+            shutil.move(ogg_path, bak_path)
+            print(f"  原 OGG 移动为 .bak: {bak_path}")
     else:
         print(f"  检测到 .bak 文件，使用 bak 为源：{bak_path}")
 
@@ -275,13 +275,14 @@ def align_ogg_silence(input_num: int, yt_id: str) -> None:
     print(f"  差值 (WebM - OGG): {diff:.4f} 秒 ({diff * 1000:.1f} ms)")
 
     if abs(diff) < DIFF_THRESHOLD:
-        print("  差异在阈值内，跳过对齐")
-        # 清理 WebM
-        try:
-            os.remove(webm_path)
-            print(f"    已清理: {webm_path}")
-        except OSError:
-            pass
+        print(f"{diff}  差异在阈值内，跳过对齐")
+        shutil.move(bak_path,ogg_path)
+        if yt_id!=webm_path:
+            try:
+                os.remove(webm_path)
+                print(f"    已清理: {webm_path}")
+            except OSError:
+                pass
         return
 
     # 6. 对齐 OGG
