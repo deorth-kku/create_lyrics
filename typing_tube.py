@@ -203,6 +203,7 @@ def writetoml(lrc:lyrics,toml_path:str,offset:float=None):
     print('write to file "%s"'%toml_path)
 
 from search_song import search_song
+from config import selected_mod
 
 if __name__=="__main__":
     try:
@@ -241,10 +242,21 @@ if __name__=="__main__":
         offset=float(sys.argv[3])
     writetoml(lrc,toml_path,offset=offset)
 
-    usm_path=os.path.dirname(lyrics_outdir) + f"/rom/movie/pv_{input_num}.usm"
+    print(f"youtube id is {yt_id}")
+    usm_path= selected_mod + f"/rom/movie/pv_{input_num}.usm"
     if not os.path.exists(usm_path):
         from yt_dlp_to_usm import yt_dlp_to_usm
         yt_dlp_to_usm("https://youtu.be/"+yt_id,output=usm_path)
+    else:
+        print("usm existed")
+
+    # === OGG 空白对齐 ===
+    try:
+        from align_ogg_silence import align_ogg_silence
+        align_ogg_silence(input_num, yt_id)
+    except Exception as e:
+        print(f"  空白对齐失败: {e}")
+    
 
 
     
