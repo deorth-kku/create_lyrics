@@ -131,17 +131,6 @@ def download_youtube_video(
     return local_webm
 
 
-def _progress_hook(d: dict) -> None:
-    """Console progress hook for yt-dlp."""
-    status = d.get("status")
-    if status == "downloading":
-        pct = d.get("_percent_str", "?").strip()
-        speed = d.get("_speed_str", "?").strip()
-        eta = d.get("_eta_str", "?").strip()
-        print(f"\r  Downloading... {pct}  Speed: {speed}  ETA: {eta}", end="", flush=True)
-    elif status == "finished":
-        print(f"\n  Download finished.")
-
 
 def _safe_filename(title: str) -> str:
     """Sanitise a string for use as a filename."""
@@ -236,9 +225,12 @@ def yt_dlp_to_usm(
     print(f"Working directory: {temp_dir}")
 
     try:
-        # --- Step 1: Download via aria2 RPC ---
-        print(f"Downloading YouTube video (format: {quality})...")
-        webm_path = download_youtube_video(url, ffmpeg_exe, temp_dir, quality)
+        if not os.path.isabs(url):
+            # --- Step 1: Download via aria2 RPC ---
+            print(f"Downloading YouTube video (format: {quality})...")
+            webm_path = download_youtube_video(url, ffmpeg_exe, temp_dir, quality)
+        else:
+            webm_path=url
 
         # --- Step 2: Remux to IVF ---
         ivf_path = str(temp_dir / "video.ivf")
