@@ -110,7 +110,15 @@ def download_youtube_video(
     if proxy:
         ydl_opts["proxy"] = proxy
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
+        info=None
+        for _ in range(30):
+            try:
+                info = ydl.extract_info(url, download=False)
+            except Exception as e:
+                print(e)
+                print("try again")
+            else:
+                break
         if info is None:
             print("ERROR: yt-dlp returned no info.")
             sys.exit(1)
@@ -122,7 +130,7 @@ def download_youtube_video(
     remote_temp = config.remote_dir.rstrip("/") + "/"
     video_fn = f"{uuid.uuid4().hex}.{video_ext}"
     remote_fn = os.path.join(remote_temp, video_fn)
-    task = rpc.wget(video_url, pwd=remote_temp, filename=video_fn, proxy=proxy)
+    task = rpc.wget(video_url, pwd=remote_temp, filename=video_fn, proxy=proxy,retry=30)
     task.wait()
 
     # 3. Map remote path -> local path
