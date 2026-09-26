@@ -130,7 +130,7 @@ def download_youtube_video(
     remote_temp = config.remote_dir.rstrip("/") + "/"
     video_fn = f"{uuid.uuid4().hex}.{video_ext}"
     remote_fn = os.path.join(remote_temp, video_fn)
-    task = rpc.wget(video_url, pwd=remote_temp, filename=video_fn, proxy=proxy,retry=30)
+    task = rpc.wget(video_url, pwd=remote_temp, filename=video_fn,stream_piece_selector="geom", proxy=proxy,retry=30)
     task.wait()
 
     # 3. Map remote path -> local path
