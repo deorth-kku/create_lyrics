@@ -29,6 +29,7 @@ CHARA_NAME = {
     "LUK": ("巡音ルカ", "Luka"),
     "KAI": ("KAITO", "Kaito"),
     "MEI": ("MEIKO", "Meiko"),
+    "GUM": ("GUMI","GUMI")
 }
 
 
