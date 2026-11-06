@@ -1,6 +1,7 @@
 *.txt
 *.log
 *.toml
+*.lrc
 config.py
 __pycache__
 .vscode
