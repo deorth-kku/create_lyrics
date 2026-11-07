@@ -76,7 +76,8 @@ def read_toml_lrc(file: str) -> list[tuple[float, str]]:
 
     with open(file, "rb") as f:
         data = tomllib.load(f)
-    return [(time_to_float(i["time"]), i["text"]) for i in data["lyrics"]]
+    offset = time_to_float(data["offset"]) if "offset" in data else 0.0
+    return [(time_to_float(i["time"]) + offset, i["text"]) for i in data["lyrics"]]
 
 
 def read_dsc_lrc(dsc: str, db: dict[str, str], pv: int) -> list[tuple[float, str]]:
