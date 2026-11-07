@@ -2,6 +2,7 @@
 *.log
 *.toml
 *.lrc
+*.dsc
 config.py
 __pycache__
 .vscode
